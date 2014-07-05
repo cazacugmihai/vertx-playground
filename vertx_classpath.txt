@@ -1,0 +1,5 @@
+src/main/resources
+bin
+out/production/frostcode-vertx-module
+out/test/frostcode-vertx-module
+build/deps

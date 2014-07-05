@@ -42,6 +42,14 @@ install - install any jars produced to the local Maven repository (.m2)
 
  */
 
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+configurations {
+  platform_lib
+  provided.extendsFrom platform_lib
+}
+
 dependencies {
   /*
   Add your module jar dependencies here
@@ -51,10 +59,12 @@ dependencies {
   provided "com.foo:foo-lib:1.0.1" - if you DON'T want it to be packaged in the module zip
   */
 
-  // If you're creating Groovy compiled verticles you may need the following dependencies
-  provided "org.codehaus.groovy:groovy-all:$groovyVersion"
-  provided "io.vertx:lang-groovy:$groovyLangModVersion@jar"
+  compile 'com.englishtown:vertx-mod-guice:1.3.0-final'
+  compile 'org.slf4j:slf4j-api:1.7.7'
 
+  platform_lib 'org.slf4j:jul-to-slf4j:1.7.7'
+  platform_lib 'ch.qos.logback:logback-core:1.1.2'
+  platform_lib 'ch.qos.logback:logback-classic:1.1.2'
 }
 
 test {
@@ -63,17 +73,27 @@ test {
   exclude 'org/boo/**'
   */
 
+  systemProperty 'vertx.langs.java', "com.englishtown~vertx-mod-guice~1.3.0-final:com.englishtown.vertx.guice.GuiceVerticleFactory"
+  systemProperty 'org.vertx.logger-delegate-factory-class-name', "org.vertx.java.core.logging.impl.SLF4JLogDelegateFactory"
 }
+
+task copyPlatformLibs(type: Copy) {
+  into "build/mods/$moduleName/platform_lib"
+  from configurations.platform_lib
+}
+
+copyMod.dependsOn copyPlatformLibs
 
 /*
 If you're uploading stuff to Maven, Gradle needs to generate a POM.
 Please edit the details below.
  */
+
 def configurePom(def pom) {
   pom.project {
     name rootProject.name
     description 'Description of your module here'
-    inceptionYear '2013'
+    inceptionYear '2014'
     packaging 'jar'
 
     url 'Your project url'

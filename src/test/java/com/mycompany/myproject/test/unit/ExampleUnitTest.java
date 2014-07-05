@@ -1,10 +1,9 @@
 package com.mycompany.myproject.test.unit;
 
-import com.mycompany.myproject.PingVerticle;
-import org.junit.Assert;
+import de.frostcode.vertx.playground.PingVerticle;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 /*
  * Copyright 2013 Red Hat, Inc.
@@ -23,14 +22,15 @@ import static org.junit.Assert.*;
  *
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
-public class ExampleUnitTest {
-
+public class ExampleUnitTest
+{
   @Test
-  public void testVerticle() {
-    PingVerticle vert = new PingVerticle();
+  public void testVerticle()
+  {
+    PingVerticle verticle = new PingVerticle(null);
 
     // Interrogate your classes directly....
 
-    assertNotNull(vert);
+    assertNotNull(verticle);
   }
 }
