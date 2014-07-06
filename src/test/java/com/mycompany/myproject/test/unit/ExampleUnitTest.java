@@ -1,6 +1,6 @@
 package com.mycompany.myproject.test.unit;
 
-import de.frostcode.vertx.playground.PingVerticle;
+import de.frostcode.vertx.playground.MainVerticle;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -27,7 +27,7 @@ public class ExampleUnitTest
   @Test
   public void testVerticle()
   {
-    PingVerticle verticle = new PingVerticle(null);
+    MainVerticle verticle = new MainVerticle(null, null);
 
     // Interrogate your classes directly....
 

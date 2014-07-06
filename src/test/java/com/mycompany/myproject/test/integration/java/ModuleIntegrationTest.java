@@ -11,6 +11,9 @@ package com.mycompany.myproject.test.integration.java;
 
 import org.junit.Test;
 import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.http.HttpClient;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.testtools.TestUtils;
 import org.vertx.testtools.TestVerticle;
 import org.vertx.testtools.VertxAssert;
 
@@ -58,6 +61,33 @@ public class ModuleIntegrationTest extends TestVerticle
       resp.bodyHandler(buffer ->
       {
         VertxAssert.assertEquals("pong!", buffer.toString());
+        testComplete();
+      });
+    });
+  }
+
+  @Test
+  public void testPingOverWebsocket()
+  {
+    HttpClient client = vertx.createHttpClient().setPort(8080);
+    client.connectWebsocket("/eventbus/websocket", websocket ->
+    {
+      // register
+      String replyAddress = TestUtils.randomAlphaString(10);
+      JsonObject msg = new JsonObject().putString("type", "register").putString("address", replyAddress);
+      websocket.writeTextFrame(msg.encode());
+
+      // send
+      String knownMessage = "hello world";
+      msg = new JsonObject().putString("type", "send").putString("address", "echo-address")
+          .putString("replyAddress", replyAddress).putString("body", knownMessage);
+      websocket.writeTextFrame(msg.encode());
+
+      // verify
+      websocket.dataHandler(buffer ->
+      {
+        JsonObject received = new JsonObject(buffer.toString());
+        VertxAssert.assertEquals("Received: " + knownMessage, received.getString("body"));
         testComplete();
       });
     });

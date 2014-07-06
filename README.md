@@ -4,6 +4,7 @@ Simple project to play around with Vert.x, included modules and customizations:
 
 * SLF4J and logback for logging
 * Guice for verticle injection
+* SockJS event bus bridge, including a test do demonstrate raw access over websocket
 
 ## Create and run a fat JAR
 
